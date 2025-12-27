@@ -4,14 +4,13 @@
  *
  * @format
  */
-
-import { NewAppScreen } from '@react-native/new-app-screen';
 import { StatusBar, StyleSheet, useColorScheme, View } from 'react-native';
 import { PaperProvider } from 'react-native-paper';
 import {
   SafeAreaProvider,
   useSafeAreaInsets,
 } from 'react-native-safe-area-context';
+import RootNavigator from './navigation';
 
 function App() {
   const isDarkMode = useColorScheme() === 'dark';
@@ -31,10 +30,7 @@ function AppContent() {
 
   return (
     <View style={styles.container}>
-      <NewAppScreen
-        templateFileName="App.tsx"
-        safeAreaInsets={safeAreaInsets}
-      />
+      <RootNavigator />
     </View>
   );
 }
