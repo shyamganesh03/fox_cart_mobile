@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "516973138604",
+    "project_id": "foxcart-2b1a7",
+    "storage_bucket": "foxcart-2b1a7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:516973138604:android:14d2802e1ab2d291a38509",
+        "android_client_info": {
+          "package_name": "com.foxcart"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC0EQgLnJWTc4Aq1gzN7VsWnETjpEPml04"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
