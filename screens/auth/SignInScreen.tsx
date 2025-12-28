@@ -1,7 +1,8 @@
-import { Keyboard, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import {
   Button,
+  HelperText,
   MD3Theme,
   Text,
   TextInput,
@@ -11,7 +12,7 @@ import PasswordInput from 'components/PasswordInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
-import { useNavigation } from '@react-navigation/native';
+import { useSignInScreen } from 'hooks/useSignInScreen';
 
 type SignInScreenProps = NativeStackNavigationProp<
   RootNavigatorParamList,
@@ -21,8 +22,14 @@ type SignInScreenProps = NativeStackNavigationProp<
 const SignInScreen = (props: SignInScreenProps) => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
-    useNavigation();
+  const {
+    email,
+    password,
+    errors,
+    handleInputChange,
+    goToForgotPassword,
+    goToSignUp,
+  } = useSignInScreen();
 
   return (
     <View style={styles.container}>
@@ -31,27 +38,45 @@ const SignInScreen = (props: SignInScreenProps) => {
       <Text style={styles.caption}>Sign in to continue your journey</Text>
       <KeyboardAwareScrollView>
         <View style={styles.inputFieldContainer}>
-          <TextInput label="Email" mode="outlined" />
-          <PasswordInput value={''} onChangeText={(text: string) => {}} />
+          <TextInput
+            label="Email"
+            mode="outlined"
+            value={email}
+            onChangeText={(text: string) => handleInputChange('email', text)}
+            error={!!errors.email}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
+          />
+          {!!errors.email ? (
+            <HelperText type="error" visible>
+              {errors.email}
+            </HelperText>
+          ) : null}
+          <PasswordInput
+            value={password}
+            error={!!errors.password}
+            errorMessage={errors.password}
+            onChangeText={(text: string) => handleInputChange('password', text)}
+          />
           <Button
             mode="text"
-            onPress={() => {
-              navigation.navigate('ForgotPasswordScreen');
-            }}
+            onPress={goToForgotPassword}
             style={styles.forgotCTAStyle}
           >
             forgot Password?
           </Button>
-          <Button mode="contained" onPress={() => {}} style={styles.ctaStyle}>
+          <Button
+            mode="contained"
+            onPress={() => {}}
+            style={styles.ctaStyle}
+            disabled={
+              !!errors.email || !!errors.password || !email || !password
+            }
+          >
             Sign In
           </Button>
-          <Button
-            mode="outlined"
-            onPress={() => {
-              navigation.navigate('SignUpScreen');
-            }}
-            style={styles.ctaStyle}
-          >
+          <Button mode="outlined" onPress={goToSignUp} style={styles.ctaStyle}>
             Sign Up
           </Button>
         </View>

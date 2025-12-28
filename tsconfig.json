@@ -8,6 +8,7 @@
       "screens/*":["screens/*"],
       "components/*":["components/*"],
       "types/*":["types/*"],
+      "hooks/*":["hooks/*"],
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
