@@ -3,6 +3,9 @@ import { useNavigation } from '@react-navigation/native';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
+import { signIn } from 'api/authApi';
+import { Alert } from 'react-native';
+import useUserToken from 'store/useUserToken';
 
 export const useSignInScreen = () => {
   const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
@@ -15,7 +18,7 @@ export const useSignInScreen = () => {
     email?: string;
     password?: string;
   }>({});
-
+  const setToken = useUserToken((state: any) => state.setToken);
   /* -------------------- VALIDATIONS -------------------- */
 
   const validateEmail = (value: string) => {
@@ -54,20 +57,25 @@ export const useSignInScreen = () => {
 
   /* -------------------- API CALL -------------------- */
 
-  const signIn = async () => {
+  const handleSignIn = async () => {
     try {
       setLoading(true);
 
-      const response = {};
+      const response = await signIn(email, password);
 
-      //   if (response.success) {
-      //     Alert.alert('Success', 'Logged in successfully');
-      //     // navigation.replace('Home');
-      //   } else {
-      //     Alert.alert('Error', response.message || 'Login failed');
-      //   }
+      if (response.success) {
+        setToken({
+          access_token: response.data.session.access_token,
+          refresh_token: response.data.session.refresh_token,
+        });
+        Alert.alert(
+          'Success',
+          `User ${response.data.user.email} logged in successfully.`,
+        );
+      } else {
+        Alert.alert('Error', response.message || 'Login failed');
+      }
     } catch (error) {
-      //   Alert.alert('Error', 'Something went wrong');
     } finally {
       setLoading(false);
     }
@@ -89,7 +97,7 @@ export const useSignInScreen = () => {
     errors,
     loading,
     handleInputChange,
-    signIn,
+    handleSignIn,
     goToSignUp,
     goToForgotPassword,
   };

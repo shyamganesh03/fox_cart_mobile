@@ -16,6 +16,7 @@ module.exports = {
           types: './types',
           hooks: './hooks',
           api: './api',
+          store: './store',
         },
       },
     ],

@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React, { FC } from 'react';
+import React from 'react';
 import {
   Button,
   HelperText,
@@ -19,7 +19,9 @@ const SignInScreen = () => {
     email,
     password,
     errors,
+    loading,
     handleInputChange,
+    handleSignIn,
     goToForgotPassword,
     goToSignUp,
   } = useSignInScreen();
@@ -61,15 +63,21 @@ const SignInScreen = () => {
           </Button>
           <Button
             mode="contained"
-            onPress={() => {}}
+            onPress={handleSignIn}
             style={styles.ctaStyle}
             disabled={
               !!errors.email || !!errors.password || !email || !password
             }
+            loading={loading}
           >
             Sign In
           </Button>
-          <Button mode="outlined" onPress={goToSignUp} style={styles.ctaStyle}>
+          <Button
+            mode="outlined"
+            onPress={goToSignUp}
+            style={styles.ctaStyle}
+            disabled={loading}
+          >
             Sign Up
           </Button>
         </View>

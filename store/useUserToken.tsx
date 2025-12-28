@@ -4,8 +4,11 @@ import { persist } from 'zustand/middleware';
 const useUserToken = create(
   persist(
     set => ({
-      token: 0,
-      setToken: (newToken: number) => set({ token: newToken }),
+      token: {
+        access_token: '',
+        refresh_token: '',
+      },
+      setToken: (tokenDetails: any) => set({ token: tokenDetails }),
     }),
     {
       name: 'access-token',
