@@ -40,6 +40,9 @@ const SignUpScreen = () => {
             value={email}
             onChangeText={(text: string) => handleInputChange('email', text)}
             error={!!errors.email}
+            autoCapitalize="none"
+            autoCorrect={false}
+            keyboardType="email-address"
           />
           {!!errors.email ? (
             <HelperText type="error" visible>

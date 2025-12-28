@@ -19,6 +19,7 @@ export const useSignInScreen = () => {
     password?: string;
   }>({});
   const setToken = useUserToken((state: any) => state.setToken);
+
   /* -------------------- VALIDATIONS -------------------- */
 
   const validateEmail = (value: string) => {
