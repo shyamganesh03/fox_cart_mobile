@@ -1,28 +1,31 @@
-import { Keyboard, StyleSheet, View } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import {
   Button,
+  HelperText,
   MD3Theme,
   Text,
   TextInput,
   useTheme,
 } from 'react-native-paper';
-import PasswordInput from 'components/PasswordInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
-import { useNavigation } from '@react-navigation/native';
 
-type SignUpScreenProps = NativeStackNavigationProp<
-  RootNavigatorParamList,
-  'SignUpScreen'
->;
+import PasswordInput from 'components/PasswordInput';
+import { useSignUpScreen } from 'hooks/useSignUpScreen';
 
-const SignUpScreen = (props: SignUpScreenProps) => {
+const SignUpScreen = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
-  const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
-    useNavigation();
+
+  const {
+    email,
+    password,
+    confirmPassword,
+    errors,
+    handleInputChange,
+    handleSignUp,
+    goBack,
+  } = useSignUpScreen();
 
   return (
     <View style={styles.container}>
@@ -31,23 +34,49 @@ const SignUpScreen = (props: SignUpScreenProps) => {
       <Text style={styles.caption}>Sign up to start your new journey</Text>
       <KeyboardAwareScrollView>
         <View style={styles.inputFieldContainer}>
-          <TextInput label="Email" mode="outlined" />
-          <PasswordInput value={''} onChangeText={(text: string) => {}} />
+          <TextInput
+            label="Email"
+            mode="outlined"
+            value={email}
+            onChangeText={(text: string) => handleInputChange('email', text)}
+            error={!!errors.email}
+          />
+          {!!errors.email ? (
+            <HelperText type="error" visible>
+              {errors.email}
+            </HelperText>
+          ) : null}
+          <PasswordInput
+            value={password}
+            onChangeText={(text: string) => handleInputChange('password', text)}
+            error={!!errors.password}
+            errorMessage={errors.password}
+          />
           <PasswordInput
             label="Re-Enter Password"
-            value={''}
-            onChangeText={(text: string) => {}}
+            value={confirmPassword}
+            onChangeText={(text: string) =>
+              handleInputChange('confirmPassword', text)
+            }
+            error={!!errors.confirmPassword}
+            errorMessage={errors.confirmPassword}
           />
-          <Button mode="contained" onPress={() => {}} style={styles.ctaStyle}>
+          <Button
+            mode="contained"
+            onPress={handleSignUp}
+            style={styles.ctaStyle}
+            disabled={
+              !!errors.email ||
+              !!errors.password ||
+              !!errors.confirmPassword ||
+              !email ||
+              !password ||
+              !confirmPassword
+            }
+          >
             Sign Up
           </Button>
-          <Button
-            mode="outlined"
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={styles.ctaStyle}
-          >
+          <Button mode="outlined" onPress={goBack} style={styles.ctaStyle}>
             Sign In
           </Button>
         </View>

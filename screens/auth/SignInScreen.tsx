@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { FC } from 'react';
 import {
   Button,
   HelperText,
@@ -10,16 +10,9 @@ import {
 } from 'react-native-paper';
 import PasswordInput from 'components/PasswordInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
 import { useSignInScreen } from 'hooks/useSignInScreen';
 
-type SignInScreenProps = NativeStackNavigationProp<
-  RootNavigatorParamList,
-  'SignInScreen'
->;
-
-const SignInScreen = (props: SignInScreenProps) => {
+const SignInScreen = () => {
   const theme = useTheme();
   const styles = createStyles(theme);
   const {

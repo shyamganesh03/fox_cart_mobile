@@ -9,6 +9,7 @@
       "components/*":["components/*"],
       "types/*":["types/*"],
       "hooks/*":["hooks/*"],
+      "api/*":["api/*"]
     }
   },
   "include": ["**/*.ts", "**/*.tsx"],
