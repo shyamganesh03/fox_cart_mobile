@@ -6,6 +6,7 @@ import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
 import { signIn } from 'api/authApi';
 import { Alert } from 'react-native';
 import useUserToken from 'store/useUserToken';
+import { getUserDetails } from 'api/userApi';
 
 export const useSignInScreen = () => {
   const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
@@ -66,13 +67,14 @@ export const useSignInScreen = () => {
 
       if (response.success) {
         setToken({
+          id: response.data.user.id,
           access_token: response.data.session.access_token,
           refresh_token: response.data.session.refresh_token,
         });
-        Alert.alert(
-          'Success',
-          `User ${response.data.user.email} logged in successfully.`,
-        );
+        navigation.reset({
+          index: 0,
+          routes: [{ name: 'BasicInfoScreen' }],
+        });
       } else {
         Alert.alert('Error', response.message || 'Login failed');
       }
@@ -92,12 +94,43 @@ export const useSignInScreen = () => {
     navigation.navigate('ForgotPasswordScreen');
   };
 
+  const handleInitialNavigation = async (userId: string) => {
+    const userData = await getUserDetails(userId);
+    console.log({ userData });
+    if (userData.success) {
+      switch (userData.data.onboarding_status) {
+        case 0:
+          return navigation.reset({
+            index: 0,
+            routes: [{ name: 'BasicInfoScreen' }],
+          });
+        case 1:
+          return navigation.reset({
+            index: 0,
+            routes: [{ name: 'AddressInfoScreen' }],
+          });
+        case 2:
+          return navigation.reset({
+            index: 0,
+            routes: [{ name: 'ProfilePicUploadScreen' }],
+          });
+
+        default:
+          return navigation.reset({
+            index: 0,
+            routes: [{ name: 'BasicInfoScreen' }],
+          });
+      }
+    }
+  };
+
   return {
     email,
     password,
     errors,
     loading,
     handleInputChange,
+    handleInitialNavigation,
     handleSignIn,
     goToSignUp,
     goToForgotPassword,

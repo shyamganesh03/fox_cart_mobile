@@ -1,10 +1,12 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { create } from 'zustand';
-import { persist } from 'zustand/middleware';
+import { createJSONStorage, persist } from 'zustand/middleware';
 
 const useUserToken = create(
   persist(
     set => ({
       token: {
+        id: '',
         access_token: '',
         refresh_token: '',
       },
@@ -12,6 +14,7 @@ const useUserToken = create(
     }),
     {
       name: 'access-token',
+      storage: createJSONStorage(() => AsyncStorage),
     },
   ),
 );

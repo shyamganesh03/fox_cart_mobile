@@ -1,5 +1,5 @@
 import { StyleSheet, View } from 'react-native';
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
   Button,
   HelperText,
@@ -11,6 +11,7 @@ import {
 import PasswordInput from 'components/PasswordInput';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import { useSignInScreen } from 'hooks/useSignInScreen';
+import useUserToken from 'store/useUserToken';
 
 const SignInScreen = () => {
   const theme = useTheme();
@@ -21,10 +22,21 @@ const SignInScreen = () => {
     errors,
     loading,
     handleInputChange,
+    handleInitialNavigation,
     handleSignIn,
     goToForgotPassword,
     goToSignUp,
   } = useSignInScreen();
+
+  const tokenDetails = useUserToken((state: any) => state.token);
+
+  console.log('tokenDetails: ', tokenDetails);
+
+  useEffect(() => {
+    if (tokenDetails.access_token) {
+      handleInitialNavigation(tokenDetails.id);
+    }
+  }, [tokenDetails]);
 
   return (
     <View style={styles.container}>
