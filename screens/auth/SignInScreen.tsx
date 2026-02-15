@@ -30,8 +30,6 @@ const SignInScreen = () => {
 
   const tokenDetails = useUserToken((state: any) => state.token);
 
-  console.log('tokenDetails: ', tokenDetails);
-
   useEffect(() => {
     if (tokenDetails.access_token) {
       handleInitialNavigation(tokenDetails.id);
