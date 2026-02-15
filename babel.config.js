@@ -1,3 +1,5 @@
+const { utils } = require('@react-native-firebase/app');
+
 module.exports = {
   presets: ['module:@react-native/babel-preset'],
   env: {
@@ -17,6 +19,7 @@ module.exports = {
           hooks: './hooks',
           api: './api',
           store: './store',
+          utils: './utils',
         },
       },
     ],

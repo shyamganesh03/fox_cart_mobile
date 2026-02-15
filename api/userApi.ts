@@ -1,10 +1,16 @@
 import axios from 'axios';
 // @ts-ignore
 import { API_END_POINT } from '@env';
+import { getUserToken } from 'utils/utils';
 
-export async function  getUserDetails(id: string) {
+export async function getUserDetails(id: string) {
   try {
-    const response = await axios.get(`${API_END_POINT}/user/${id}`);
+    const token = await getUserToken();
+    const response = await axios.get(`${API_END_POINT}/user/${id}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
     return {
       success: true,
       data: response.data,
@@ -20,9 +26,16 @@ export async function  getUserDetails(id: string) {
 
 export async function updateUserDetails(id: string, userDetails: any) {
   try {
+    const token = await getUserToken();
+
     const response = await axios.put(
       `${API_END_POINT}/users/${id}`,
       userDetails,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     return {
       success: true,
@@ -39,9 +52,18 @@ export async function updateUserDetails(id: string, userDetails: any) {
 
 export async function updateFcmToken(id: string, fcmToken: string) {
   try {
-    const response = await axios.put(`${API_END_POINT}/user/${id}/fcm-token`, {
-      fcmToken,
-    });
+    const token = await getUserToken();
+    const response = await axios.put(
+      `${API_END_POINT}/user/${id}/fcm-token`,
+      {
+        fcmToken,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
+    );
     return {
       success: true,
       data: response.data,
@@ -57,10 +79,17 @@ export async function updateFcmToken(id: string, fcmToken: string) {
 
 export async function updateProfilePic(id: string, file: File) {
   try {
+    const token = await getUserToken();
+
     const response = await axios.post(
       `${API_END_POINT}/user/${id}/profile-pic`,
       {
         file,
+      },
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       },
     );
     return {
@@ -78,8 +107,14 @@ export async function updateProfilePic(id: string, file: File) {
 
 export async function deleteProfilePic(id: string) {
   try {
+    const token = await getUserToken();
     const response = await axios.delete(
       `${API_END_POINT}/user/${id}/profile-pic`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      },
     );
     return {
       success: true,

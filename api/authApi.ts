@@ -1,7 +1,7 @@
 import axios from 'axios';
 // @ts-ignore
 import { API_END_POINT } from '@env';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { getUserToken } from 'utils/utils';
 
 export async function signUp(email: string, password: string) {
   try {
@@ -42,10 +42,9 @@ export async function signIn(email: string, password: string) {
 
 export async function signOut(email: string, password: string) {
   try {
-    const token = await AsyncStorage.getItem('access-token');
-    const parsedToken = token ? JSON.parse(token) : null;
+    const token = await getUserToken();
     const response = await axios.post(`${API_END_POINT}/auth/signout`, {
-      accessToken: parsedToken?.state.token.access_token,
+      accessToken: token,
     });
     return {
       success: true,
