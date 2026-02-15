@@ -2,7 +2,7 @@ import axios from 'axios';
 // @ts-ignore
 import { API_END_POINT } from '@env';
 
-export async function getUserDetails(id: string) {
+export async function  getUserDetails(id: string) {
   try {
     const response = await axios.get(`${API_END_POINT}/user/${id}`);
     return {

@@ -7,6 +7,7 @@ import { signIn } from 'api/authApi';
 import { Alert } from 'react-native';
 import useUserToken from 'store/useUserToken';
 import { getUserDetails } from 'api/userApi';
+import useUserData from 'store/useUserData';
 
 export const useSignInScreen = () => {
   const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
@@ -20,6 +21,7 @@ export const useSignInScreen = () => {
     password?: string;
   }>({});
   const setToken = useUserToken((state: any) => state.setToken);
+  const setUserData = useUserData((state: any) => state.setUser);
 
   /* -------------------- VALIDATIONS -------------------- */
 
@@ -96,8 +98,8 @@ export const useSignInScreen = () => {
 
   const handleInitialNavigation = async (userId: string) => {
     const userData = await getUserDetails(userId);
-    console.log({ userData });
     if (userData.success) {
+      setUserData(userData.data);
       switch (userData.data.onboarding_status) {
         case 0:
           return navigation.reset({

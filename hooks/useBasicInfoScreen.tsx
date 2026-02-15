@@ -1,5 +1,11 @@
 import { useMemo, useRef, useState } from 'react';
+import { useNavigation } from '@react-navigation/native';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import PhoneInput from 'react-native-phone-number-input';
+
+import { updateUserDetails } from 'api/userApi';
+import useUserData from 'store/useUserData';
+import { RootNavigatorParamList } from 'types/rootNavigatorParamList';
 
 type Gender = 'male' | 'female' | '';
 
@@ -27,6 +33,12 @@ export const useBasicInfoScreen = () => {
       Object.values(errors).some(err => err !== '')
     );
   }, [fullName, gender, phoneNumber, errors]);
+
+  const navigation: NativeStackNavigationProp<RootNavigatorParamList> =
+    useNavigation();
+
+  const userData = useUserData((state: any) => state.user);
+  const setUserData = useUserData((state: any) => state.setUserData);
 
   /* -------------------- VALIDATIONS -------------------- */
 
@@ -71,7 +83,7 @@ export const useBasicInfoScreen = () => {
 
   /* -------------------- ACTIONS -------------------- */
 
-  const onContinue = () => {
+  const onContinue = async () => {
     const isValid = validateForm();
     if (!isValid) return;
 
@@ -79,13 +91,17 @@ export const useBasicInfoScreen = () => {
       fullName: fullName.trim(),
       gender,
       phoneNumber: `+${phoneNumber.code}-${phoneNumber.phone}`,
-      onboarding_status: 2,
+      onboarding_status: userData.onboarding_status + 1,
     };
-
-    console.log('Basic Info Payload:', payload);
-
-    // 👉 Call API or navigate next screen here
-    // navigation.navigate('NextScreen', payload)
+    const response = await updateUserDetails(userData.id, payload);
+    if (response.success) {
+      setUserData(response.data);
+      if (response.data.onboarding_status === 1) {
+        navigation.navigate('AddressInfoScreen');
+      } else if (response.data.onboarding_status === 2) {
+        navigation.navigate('ProfilePicUploadScreen');
+      }
+    }
   };
 
   /* -------------------- RETURN -------------------- */
